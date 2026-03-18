@@ -14,20 +14,20 @@ const results: BeforeAfterItem[] = [
   {
     id: 1,
     area: "Forehead Lines",
-    beforeImage: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&q=80",
-    afterImage: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80",
+    beforeImage: "/images/results/forehead-before.jpg",
+    afterImage: "/images/results/forehead-after.jpg",
   },
   {
     id: 2,
     area: "Crow's Feet",
-    beforeImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80",
-    afterImage: "https://images.unsplash.com/photo-1546961342-ea1f71b193f3?w=600&q=80",
+    beforeImage: "/images/results/crows-feet-before.jpg",
+    afterImage: "/images/results/crows-feet-after.jpg",
   },
   {
     id: 3,
     area: "Frown Lines",
-    beforeImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80",
-    afterImage: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&q=80",
+    beforeImage: "/images/results/frown-lines-before.jpg",
+    afterImage: "/images/results/frown-lines-after.jpg",
   },
 ]
 
