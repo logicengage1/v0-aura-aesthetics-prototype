@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog"
 import { StepTreatment } from "./step-treatment"
 import { StepDateTime } from "./step-datetime"
@@ -37,6 +38,9 @@ export function BookingModal() {
         <DialogTitle className="sr-only">
           Book Your Consultation
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          Complete the steps to book your Botox consultation at Aura Aesthetics
+        </DialogDescription>
         
         {/* Step Progress (not shown on success) */}
         {currentStep !== "success" && (

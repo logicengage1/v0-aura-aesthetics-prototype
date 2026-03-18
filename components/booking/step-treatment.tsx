@@ -2,7 +2,6 @@
 
 import { useBooking, type TreatmentArea } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -64,25 +63,54 @@ export function StepTreatment() {
         {treatments.map((treatment) => {
           const isSelected = selectedTreatments.includes(treatment.id)
           return (
-            <button
+            <div
               key={treatment.id}
+              role="checkbox"
+              aria-checked={isSelected}
+              tabIndex={0}
               onClick={() => toggleTreatment(treatment.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  toggleTreatment(treatment.id)
+                }
+              }}
               className={cn(
-                "flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
+                "flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-primary/50",
                 isSelected
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50 hover:bg-muted/50"
               )}
             >
-              <Checkbox
-                checked={isSelected}
-                className="mt-0.5 h-5 w-5 rounded border-2"
-              />
+              <div
+                className={cn(
+                  "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors",
+                  isSelected
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-input bg-background"
+                )}
+              >
+                {isSelected && (
+                  <svg
+                    className="h-3 w-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                )}
+              </div>
               <div>
                 <p className="font-medium text-foreground">{treatment.label}</p>
                 <p className="text-xs text-muted-foreground">{treatment.description}</p>
               </div>
-            </button>
+            </div>
           )
         })}
       </div>
