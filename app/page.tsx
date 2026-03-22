@@ -14,6 +14,10 @@ import { Newsletter } from "@/components/sections/newsletter"
 import { Footer } from "@/components/sections/footer"
 import { BookingModal } from "@/components/booking/booking-modal"
 import { StickyBookingBar } from "@/components/ui/sticky-booking-bar"
+import { SocialPulse } from "@/components/ui/social-pulse"
+import { AnatomyOfArtistry } from "@/components/sections/anatomy-of-artistry"
+import { TransformationTimeline } from "@/components/sections/transformation-timeline"
+import { AuraAssessment } from "@/components/booking/aura-assessment"
 
 export default function Home() {
   return (
@@ -27,7 +31,9 @@ export default function Home() {
           <Hero />
           <TrustBar />
           <ResultsGallery />
+          <TransformationTimeline />
           <Benefits />
+          <AnatomyOfArtistry />
           <Process />
           <Pricing />
           <Testimonials />
@@ -41,6 +47,7 @@ export default function Home() {
         {/* UI Overlays */}
         <StickyBookingBar />
         <BookingModal />
+        <SocialPulse />
       </div>
     </BookingProvider>
   )

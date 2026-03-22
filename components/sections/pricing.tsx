@@ -49,7 +49,14 @@ const plans = [
 export function Pricing() {
   const { setIsOpen } = useBooking()
   const [isAnnual, setIsAnnual] = useState(false)
+  const [showROI, setShowROI] = useState(false)
   useScrollReveal()
+
+  const calculateDaily = (price: string) => {
+    const num = parseInt(price.replace("$", ""))
+    // Logic: Average 32 units for full face results / 90 day cycle
+    return ((num * 32) / 90).toFixed(2)
+  }
 
   return (
     <section id="pricing" className="bg-card py-24 lg:py-40 relative overflow-hidden">
@@ -76,8 +83,8 @@ export function Pricing() {
             </p>
           </div>
 
-          {/* Pricing Toggle */}
-          <div className="animate-on-scroll mt-12 flex justify-center [transition-delay:300ms]">
+          {/* Pricing Toggle & ROI Calculator */}
+          <div className="animate-on-scroll mt-12 flex flex-col items-center gap-6 [transition-delay:300ms]">
             <div className="relative flex items-center rounded-full bg-background p-1 luxury-shadow border border-border/50">
               <button
                 onClick={() => setIsAnnual(false)}
@@ -104,6 +111,24 @@ export function Pricing() {
                 )}
               />
             </div>
+
+            {/* ROI Toggle */}
+            <div className="flex items-center gap-4">
+               <span className={cn("text-xs font-bold uppercase tracking-widest transition-opacity", !showROI ? "text-primary" : "text-muted-foreground opacity-50")}>Per Unit</span>
+               <button 
+                 onClick={() => setShowROI(!showROI)}
+                 className="relative w-12 h-6 rounded-full bg-muted border border-border transition-colors group"
+               >
+                 <div className={cn("absolute top-1 w-4 h-4 rounded-full bg-primary transition-all duration-300", showROI ? "left-7" : "left-1")} />
+               </button>
+               <span className={cn("text-xs font-bold uppercase tracking-widest transition-opacity", showROI ? "text-primary" : "text-muted-foreground opacity-50")}>ROI View (Daily Cost)</span>
+            </div>
+            
+            {showROI && (
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent animate-in fade-in slide-in-from-bottom-2 duration-500">
+                Investment framed as daily confidence based on a 90-day cycle
+              </p>
+            )}
           </div>
         </div>
 
@@ -157,19 +182,21 @@ export function Pricing() {
                   <span className={cn(
                     "font-serif text-7xl font-medium tracking-tighter transition-all duration-500",
                     plan.highlighted ? "text-background" : "text-foreground",
-                    isAnnual && "scale-105 text-primary"
+                    (isAnnual || showROI) && "scale-105 text-primary"
                   )}>
-                    {isAnnual ? plan.memberPrice : plan.singlePrice}
+                    {showROI ? `$${calculateDaily(isAnnual ? plan.memberPrice : plan.singlePrice)}` : (isAnnual ? plan.memberPrice : plan.singlePrice)}
                   </span>
                   <div className="flex flex-col">
                     <span className={cn(
                       "text-sm font-bold uppercase tracking-widest",
                       plan.highlighted ? "text-background/60" : "text-muted-foreground"
                     )}>
-                      {plan.unit}
+                      {showROI ? "/ Day" : plan.unit}
                     </span>
-                    {isAnnual && (
-                      <span className="text-[10px] font-bold text-accent uppercase tracking-tighter">Member Rate</span>
+                    {(isAnnual || showROI) && (
+                      <span className="text-[10px] font-bold text-accent uppercase tracking-tighter">
+                        {showROI ? "Confidence Investment" : "Member Rate"}
+                      </span>
                     )}
                   </div>
                 </div>

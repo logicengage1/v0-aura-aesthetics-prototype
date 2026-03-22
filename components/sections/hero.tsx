@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react"
 import { useBooking } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play, Star } from "lucide-react"
+import { ArrowRight, Play, Star, Sparkles } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { cn } from "@/lib/utils"
 
 export function Hero() {
-  const { setIsOpen } = useBooking()
+  const { setIsOpen, setIsAssessmentOpen } = useBooking()
   const [scrollY, setScrollY] = useState(0)
   useScrollReveal()
 
@@ -94,17 +94,22 @@ export function Hero() {
               <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full transition-transform duration-1000 group-hover:translate-x-full" />
             </Button>
             
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-18 rounded-full border-white/30 bg-white/10 px-12 text-lg font-bold text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:border-white/50"
-              asChild
-            >
-              <a href="#results" className="flex items-center gap-3">
-                View Results
-                <Play className="h-5 w-5 fill-current" />
-              </a>
-            </Button>
+            <div className="flex flex-col items-center sm:items-start gap-4">
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-18 rounded-full border-white/30 bg-white/10 px-12 text-lg font-bold text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:border-white/50"
+                onClick={() => setIsAssessmentOpen(true)}
+              >
+                <span className="flex items-center gap-3">
+                  Aura Assessment
+                  <Sparkles className="h-5 w-5 fill-current text-accent animate-pulse" />
+                </span>
+              </Button>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 ml-4 hidden sm:block">
+                Start your personalized plan
+              </p>
+            </div>
           </div>
 
           {/* Trust Indicators with high-contrast styling */}

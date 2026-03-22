@@ -39,6 +39,8 @@ interface BookingContextType extends BookingState {
   resetBooking: () => void
   isOpen: boolean
   setIsOpen: (open: boolean) => void
+  isAssessmentOpen: boolean
+  setIsAssessmentOpen: (open: boolean) => void
 }
 
 const initialState: BookingState = {
@@ -60,6 +62,7 @@ const BookingContext = createContext<BookingContextType | null>(null)
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<BookingState>(initialState)
   const [isOpen, setIsOpen] = useState(false)
+  const [isAssessmentOpen, setIsAssessmentOpen] = useState(false)
 
   const setStep = (step: BookingStep) => {
     setState((prev) => ({ ...prev, currentStep: step }))
@@ -103,6 +106,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   const resetBooking = () => {
     setState(initialState)
     setIsOpen(false)
+    setIsAssessmentOpen(false)
   }
 
   return (
@@ -119,6 +123,8 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         resetBooking,
         isOpen,
         setIsOpen,
+        isAssessmentOpen,
+        setIsAssessmentOpen,
       }}
     >
       {children}
