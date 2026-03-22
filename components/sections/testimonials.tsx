@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 const testimonials = [
   {
@@ -11,6 +12,7 @@ const testimonials = [
     location: "Beverly Hills",
     quote: "I just look like I've had a really great nap. No one knew I had Botox, they just said I looked glowing.",
     rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=elena",
   },
   {
     id: 2,
@@ -18,6 +20,7 @@ const testimonials = [
     location: "Santa Monica",
     quote: "Professional, clinical environment. The symmetry promise gave me total peace of mind.",
     rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=james",
   },
   {
     id: 3,
@@ -25,121 +28,163 @@ const testimonials = [
     location: "West Hollywood",
     quote: "Zero bruising and a completely natural look. I'm officially an Aura Insider.",
     rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=sarah",
   },
 ]
 
 export function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  useScrollReveal()
 
   useEffect(() => {
     if (isPaused) return
     
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-    }, 5000)
+      handleNext()
+    }, 6000)
 
     return () => clearInterval(interval)
-  }, [isPaused])
+  }, [isPaused, currentIndex])
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  const handleNext = () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+    setTimeout(() => setIsAnimating(false), 600)
   }
 
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+  const handlePrevious = () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    setTimeout(() => setIsAnimating(false), 600)
   }
 
   return (
-    <section id="testimonials" className="bg-background py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="testimonials" className="bg-background py-24 lg:py-40 relative overflow-hidden">
+      {/* Background Accents */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]" />
+
+      <div className="mx-auto max-w-7xl px-6 relative z-10">
         {/* Section Header */}
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-accent">
-            Client Stories
-          </p>
-          <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl md:text-5xl">
-            <span className="text-balance">Voices of Confidence</span>
-          </h2>
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="animate-on-scroll">
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-accent">
+              Testimonials
+            </p>
+          </div>
+          <div className="animate-on-scroll [transition-delay:100ms]">
+            <h2 className="font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl">
+              <span className="text-balance">Voices of Confidence</span>
+            </h2>
+          </div>
         </div>
 
         {/* Testimonial Carousel */}
         <div
-          className="relative mt-16"
+          className="relative mt-20"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="mx-auto max-w-4xl overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial.id}
-                  className="w-full flex-shrink-0 px-4"
-                >
-                  <div className="rounded-3xl bg-card p-8 text-center lg:p-12">
-                    {/* Quote Icon */}
-                    <Quote className="mx-auto h-10 w-10 text-primary/30" />
+          <div className="mx-auto max-w-5xl overflow-visible">
+            <div className="relative h-[480px] sm:h-[400px] lg:h-[420px]">
+              {testimonials.map((testimonial, index) => {
+                const isActive = index === currentIndex
+                const isPrevious = index === (currentIndex - 1 + testimonials.length) % testimonials.length
+                const isNext = index === (currentIndex + 1) % testimonials.length
 
-                    {/* Quote */}
-                    <blockquote className="mt-6 font-serif text-2xl font-medium leading-relaxed text-foreground sm:text-3xl">
-                      &ldquo;{testimonial.quote}&rdquo;
-                    </blockquote>
+                return (
+                  <div
+                    key={testimonial.id}
+                    className={cn(
+                      "absolute inset-0 transition-all duration-700 ease-luxury py-4",
+                      isActive ? "z-20 opacity-100 scale-100 rotate-0" : 
+                      isPrevious ? "z-10 opacity-0 -translate-x-full scale-90 -rotate-6" :
+                      isNext ? "z-10 opacity-0 translate-x-full scale-90 rotate-6" :
+                      "z-0 opacity-0 scale-75"
+                    )}
+                  >
+                    <div className="h-full rounded-[3rem] bg-card/50 glass p-8 text-center lg:p-16 luxury-shadow border border-white/40 flex flex-col justify-center items-center">
+                      {/* Quote Icon */}
+                      <div className="relative mb-8">
+                        <Quote className="h-12 w-12 text-primary/20 transition-transform duration-700 group-hover:rotate-12" />
+                        <div className="absolute inset-0 animate-ping rounded-full bg-primary/5 [animation-duration:3s]" />
+                      </div>
 
-                    {/* Rating */}
-                    <div className="mt-6 flex justify-center gap-1">
-                      {Array.from({ length: testimonial.rating }).map((_, i) => (
-                        <svg
-                          key={i}
-                          className="h-5 w-5 fill-accent text-accent"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
+                      {/* Quote */}
+                      <blockquote className="font-serif text-2xl font-medium leading-relaxed text-foreground sm:text-3xl lg:text-4xl italic">
+                        &ldquo;{testimonial.quote}&rdquo;
+                      </blockquote>
 
-                    {/* Author */}
-                    <div className="mt-6">
-                      <p className="font-medium text-foreground">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                      {/* Rating */}
+                      <div className="mt-10 flex justify-center gap-1.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={cn(
+                              "h-5 w-5 transition-all duration-500",
+                              i < testimonial.rating ? "fill-accent text-accent" : "text-muted-foreground/30",
+                              isActive && "animate-fade-scale-in"
+                            )}
+                            style={{ animationDelay: `${800 + i * 100}ms` }}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Author */}
+                      <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:text-left">
+                        <div className="h-14 w-14 rounded-full border-2 border-primary/20 p-1 luxury-shadow">
+                          <img 
+                            src={testimonial.avatar} 
+                            alt={testimonial.name} 
+                            className="h-full w-full rounded-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-bold text-lg text-foreground tracking-tight">{testimonial.name}</p>
+                          <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground/80">{testimonial.location}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 
           {/* Navigation Arrows */}
-          <button
-            onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full bg-card p-3 shadow-lg transition-all hover:bg-background hover:scale-110 lg:-left-4"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="h-6 w-6 text-foreground" />
-          </button>
-          <button
-            onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-card p-3 shadow-lg transition-all hover:bg-background hover:scale-110 lg:-right-4"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="h-6 w-6 text-foreground" />
-          </button>
+          <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between pointer-events-none px-4 lg:-px-8">
+            <button
+              onClick={handlePrevious}
+              className="pointer-events-auto h-14 w-14 rounded-full bg-white/40 glass shadow-2xl flex items-center justify-center transition-all hover:bg-white hover:scale-110 active:scale-95 group"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="h-6 w-6 text-foreground transition-transform group-hover:-translate-x-0.5" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="pointer-events-auto h-14 w-14 rounded-full bg-white/40 glass shadow-2xl flex items-center justify-center transition-all hover:bg-white hover:scale-110 active:scale-95 group"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="h-6 w-6 text-foreground transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </div>
         </div>
 
         {/* Dots Indicator */}
-        <div className="mt-8 flex justify-center gap-2">
+        <div className="mt-12 flex justify-center gap-3">
           {testimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={cn(
-                "h-2 rounded-full transition-all",
+                "h-2.5 rounded-full transition-all duration-500",
                 index === currentIndex
-                  ? "w-8 bg-primary"
-                  : "w-2 bg-border hover:bg-muted-foreground"
+                  ? "w-10 bg-primary"
+                  : "w-2.5 bg-border hover:bg-muted-foreground/50"
               )}
               aria-label={`Go to testimonial ${index + 1}`}
             />

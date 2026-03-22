@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react"
 import { useBooking } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Sparkle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
   { label: "Results", href: "#results" },
   { label: "Benefits", href: "#benefits" },
+  { label: "Process", href: "#process" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ]
@@ -20,47 +21,57 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 20)
     }
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const handleNavClick = () => {
-    setIsMobileMenuOpen(false)
-  }
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-luxury",
         isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
+          ? "py-3 bg-white/70 glass border-b border-white/40 shadow-xl"
+          : "py-6 bg-transparent"
       )}
     >
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#hero" className="flex items-center gap-2">
-            <span className="font-serif text-2xl font-medium tracking-tight text-foreground">
-              Aura
-            </span>
-            <span className="hidden text-sm font-light text-muted-foreground sm:inline">
-              Aesthetics & Wellness
-            </span>
+          <a href="#hero" className="group flex items-center gap-3">
+            <div className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-all duration-500 group-hover:rotate-12 group-hover:scale-110",
+              isScrolled ? "h-9 w-9" : "h-11 w-11"
+            )}>
+              <Sparkle className="h-6 w-6 fill-current" />
+            </div>
+            <div className="flex flex-col">
+              <span className={cn(
+                "font-serif font-bold tracking-tight text-foreground transition-all duration-500",
+                isScrolled ? "text-xl" : "text-2xl"
+              )}>
+                Aura
+              </span>
+              {!isScrolled && (
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/60 animate-fade-in">
+                  Aesthetics & Wellness
+                </span>
+              )}
+            </div>
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-8 lg:flex">
+          <nav className="hidden items-center gap-10 lg:flex">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
+                className="group relative text-sm font-bold uppercase tracking-widest text-foreground/70 transition-colors hover:text-foreground"
               >
                 {link.label}
+                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -69,14 +80,21 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Button
               onClick={() => setIsOpen(true)}
-              className="hidden h-10 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 sm:inline-flex"
+              className={cn(
+                "hidden rounded-full font-bold transition-all hover:scale-105 active:scale-95 group overflow-hidden sm:inline-flex",
+                isScrolled ? "bg-primary h-10 px-6 text-xs" : "bg-foreground text-background h-12 px-8 text-sm"
+              )}
             >
-              Book Now
+              <span className="relative z-10">Schedule Session</span>
+              <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full transition-transform duration-1000 group-hover:translate-x-full" />
             </Button>
             
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border lg:hidden"
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full border transition-all lg:hidden",
+                isMobileMenuOpen ? "bg-foreground border-foreground text-background rotate-90" : "bg-background border-border text-foreground"
+              )}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
@@ -92,58 +110,43 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-x-0 top-20 bg-background/98 backdrop-blur-lg transition-all duration-300 lg:hidden",
-          isMobileMenuOpen
-            ? "visible opacity-100"
-            : "invisible opacity-0"
+          "fixed inset-0 top-0 -z-10 h-screen w-full bg-background/95 backdrop-blur-2xl transition-all duration-700 ease-luxury lg:hidden",
+          isMobileMenuOpen ? "translate-y-0 opacity-100 visible" : "-translate-y-full opacity-0 invisible"
         )}
       >
-        <nav className="mx-auto max-w-7xl px-6 py-8">
-          {/* Mobile CTA */}
-          <Button
-            onClick={() => {
-              setIsOpen(true)
-              setIsMobileMenuOpen(false)
-            }}
-            className="mb-6 h-14 w-full rounded-full bg-primary text-base font-medium text-primary-foreground"
-          >
-            Book Now
-          </Button>
-          
-          {/* Mobile Nav Links */}
-          <div className="space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={handleNavClick}
-                className="block rounded-lg py-3 text-lg font-medium text-foreground transition-colors hover:bg-muted/50"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          {/* Contact Info */}
-          <div className="mt-8 border-t border-border pt-8">
-            <p className="text-sm text-muted-foreground">Questions?</p>
+        <nav className="flex h-full flex-col items-center justify-center gap-8 px-6 pt-20">
+          {navLinks.map((link, i) => (
             <a
-              href="tel:+13105551234"
-              className="text-lg font-medium text-foreground hover:text-primary"
+              key={link.href}
+              href={link.href}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={cn(
+                "text-3xl font-serif font-medium text-foreground transition-all duration-500 hover:text-primary hover:tracking-widest",
+                isMobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              )}
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
-              (310) 555-1234
+              {link.label}
             </a>
+          ))}
+          
+          <div className="mt-12 w-full max-w-xs space-y-6">
+            <Button
+              onClick={() => {
+                setIsOpen(true)
+                setIsMobileMenuOpen(false)
+              }}
+              className="h-16 w-full rounded-full bg-primary text-lg font-bold text-primary-foreground shadow-2xl"
+            >
+              Book Your Experience
+            </Button>
+            <div className="text-center">
+              <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">Or call us</p>
+              <a href="tel:+13105551234" className="text-2xl font-serif font-medium text-foreground">(310) 555-1234</a>
+            </div>
           </div>
         </nav>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 top-20 z-[-1] bg-foreground/20 lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
     </header>
   )
 }

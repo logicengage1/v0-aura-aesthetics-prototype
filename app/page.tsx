@@ -1,3 +1,5 @@
+"use client"
+
 import { BookingProvider } from "@/lib/booking-context"
 import { Header } from "@/components/navigation/header"
 import { Hero } from "@/components/sections/hero"
@@ -11,11 +13,12 @@ import { FAQ } from "@/components/sections/faq"
 import { Newsletter } from "@/components/sections/newsletter"
 import { Footer } from "@/components/sections/footer"
 import { BookingModal } from "@/components/booking/booking-modal"
+import { StickyBookingBar } from "@/components/ui/sticky-booking-bar"
 
 export default function Home() {
   return (
     <BookingProvider>
-      <div className="min-h-screen">
+      <div className="min-h-screen relative">
         {/* Navigation */}
         <Header />
 
@@ -35,7 +38,8 @@ export default function Home() {
         {/* Footer */}
         <Footer />
 
-        {/* Booking Modal */}
+        {/* UI Overlays */}
+        <StickyBookingBar />
         <BookingModal />
       </div>
     </BookingProvider>

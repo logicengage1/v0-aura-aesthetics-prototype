@@ -6,6 +6,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { Phone, MessageSquare, Sparkles } from "lucide-react"
 
 const faqs = [
   {
@@ -35,46 +37,74 @@ const faqs = [
 ]
 
 export function FAQ() {
+  useScrollReveal()
+
   return (
-    <section id="faq" className="bg-card py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
+    <section id="faq" className="bg-card py-24 lg:py-40 relative overflow-hidden">
+      {/* Background Accent */}
+      <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+
+      <div className="mx-auto max-w-7xl px-6 relative z-10">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-32">
           {/* Section Header */}
           <div>
-            <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-accent">
-              Questions & Answers
-            </p>
-            <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              <span className="text-balance">Everything You Need to Know</span>
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              We believe in complete transparency. Here are answers to our most frequently asked questions.
-            </p>
-            <div className="mt-8 rounded-2xl bg-background p-6">
-              <p className="text-sm text-muted-foreground">
-                Have a question we haven&apos;t answered?
+            <div className="animate-on-scroll">
+              <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-accent">
+                Informed Choices
               </p>
-              <p className="mt-2 font-medium text-foreground">
-                Call us at{" "}
-                <a href="tel:+13105551234" className="text-primary hover:underline">
-                  (310) 555-1234
-                </a>
+            </div>
+            <div className="animate-on-scroll [transition-delay:100ms]">
+              <h2 className="font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                <span className="text-balance">Knowledge is Beautiful</span>
+              </h2>
+            </div>
+            <div className="animate-on-scroll [transition-delay:200ms]">
+              <p className="mt-8 text-lg leading-relaxed text-muted-foreground sm:text-xl">
+                We believe in complete transparency. Our practitioners are here to guide you through every choice.
               </p>
+            </div>
+
+            <div className="animate-on-scroll mt-12 rounded-[2rem] bg-background/50 glass p-8 border border-white/40 luxury-shadow [transition-delay:300ms]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-6">
+                <MessageSquare className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
+                Still curious?
+              </p>
+              <p className="mt-4 text-xl font-serif text-foreground">
+                Our specialists are available for immediate consultation.
+              </p>
+              <a 
+                href="tel:+13105551234" 
+                className="mt-6 inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all"
+              >
+                <Phone className="h-4 w-4" />
+                (310) 555-1234
+              </a>
             </div>
           </div>
 
           {/* FAQ Accordion */}
-          <div>
-            <Accordion type="single" collapsible className="w-full">
+          <div className="mt-10 lg:mt-0">
+            <Accordion type="single" collapsible className="w-full space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border-border">
-                  <AccordionTrigger className="py-5 text-left font-serif text-lg font-medium text-foreground hover:text-primary hover:no-underline">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-muted-foreground leading-relaxed">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
+                <div 
+                  key={index} 
+                  className="animate-on-scroll" 
+                  style={{ transitionDelay: `${(index + 2) * 100}ms` }}
+                >
+                  <AccordionItem 
+                    value={`item-${index}`} 
+                    className="border-none bg-background/30 rounded-2xl px-6 transition-all duration-300 hover:bg-background/60 hover:shadow-lg overflow-hidden"
+                  >
+                    <AccordionTrigger className="py-6 text-left font-serif text-xl font-medium text-foreground hover:text-primary hover:no-underline gap-4">
+                      <span className="flex-1">{faq.question}</span>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-6 text-muted-foreground leading-relaxed text-base italic pr-8">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </div>
               ))}
             </Accordion>
           </div>
