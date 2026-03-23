@@ -17,6 +17,7 @@ import { StickyBookingBar } from "@/components/ui/sticky-booking-bar"
 import { SocialPulse } from "@/components/ui/social-pulse"
 import { TransformationTimeline } from "@/components/sections/transformation-timeline"
 import { AuraAssessment } from "@/components/booking/aura-assessment"
+import { BackToTop } from "@/components/navigation/back-to-top"
 
 export default function Home() {
   return (
@@ -39,6 +40,7 @@ export default function Home() {
         <StickyBookingBar />
         <BookingModal />
         <AuraAssessment />
+        <BackToTop />
         <SocialPulse />
       </div>
     </BookingProvider>

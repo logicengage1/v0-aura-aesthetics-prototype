@@ -12,7 +12,6 @@ const testimonials = [
     location: "Beverly Hills",
     quote: "I just look like I've had a really great nap. No one knew I had Botox, they just said I looked glowing.",
     rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=elena",
   },
   {
     id: 2,
@@ -20,7 +19,6 @@ const testimonials = [
     location: "Santa Monica",
     quote: "Professional, clinical environment. The symmetry promise gave me total peace of mind.",
     rating: 5,
-    avatar: null, // Shows monogram
   },
   {
     id: 3,
@@ -28,7 +26,6 @@ const testimonials = [
     location: "West Hollywood",
     quote: "Zero bruising and a completely natural look. I'm officially an Aura Insider.",
     rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=sarah",
   },
 ]
 
@@ -96,6 +93,12 @@ export function Testimonials() {
                 const isPrevious = index === (currentIndex - 1 + testimonials.length) % testimonials.length
                 const isNext = index === (currentIndex + 1) % testimonials.length
 
+                const monogram = testimonial.name
+                  .split(' ')
+                  .map(n => n[0])
+                  .join('')
+                  .toUpperCase()
+
                 return (
                   <div
                     key={testimonial.id}
@@ -135,28 +138,19 @@ export function Testimonials() {
                       </div>
 
                       {/* Author */}
-                      <div className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:text-left">
-                        {testimonial.avatar ? (
-                          <div className="h-20 w-20 rounded-full border-4 border-white/80 p-1 luxury-shadow overflow-hidden group-hover:scale-105 transition-transform duration-500">
-                            <img 
-                              src={testimonial.avatar} 
-                              alt={testimonial.name} 
-                              className="h-full w-full rounded-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-20 w-20 rounded-full border-[3px] border-accent/40 bg-card luxury-shadow flex items-center justify-center group-hover:scale-105 transition-transform duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
-                             <span className="text-2xl font-serif font-bold text-accent tracking-tighter">
-                                {testimonial.name.split(' ').map(n => n[0]).join('')}
-                             </span>
-                          </div>
-                        )}
+                      <div className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:text-left transition-all duration-500">
+                        <div className="relative h-20 w-20 rounded-full border-[3px] border-accent/40 bg-card luxury-shadow flex items-center justify-center group-hover:scale-105 transition-transform duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+                          <span className="text-2xl font-serif font-bold text-accent tracking-tighter">
+                            {monogram}
+                          </span>
+                          <div className="absolute -inset-2 rounded-full border border-accent/10 animate-spin-slow opacity-50" />
+                        </div>
                         <div className="flex flex-col items-center sm:items-start group/verified">
                           <div className="flex items-center gap-2 mb-1.5">
                              <p className="font-bold text-xl text-foreground tracking-tight">{testimonial.name}</p>
                              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
                                 <CheckCircle2 className="h-3 w-3 text-accent" />
-                                <span className="text-[9px] font-bold uppercase tracking-widest text-accent">Verified</span>
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-accent">Verified Member</span>
                              </div>
                           </div>
                           <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground/80">{testimonial.location}</p>
