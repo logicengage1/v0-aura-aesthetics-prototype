@@ -48,6 +48,9 @@ export function Hero() {
           style={{ opacity: 0.6 + scrollY * 0.001 }}
         />
         
+        {/* Top-down Header Scrim */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none" />
+        
         {/* Submarine-style backdrop blur to quiet high-detail video frames */}
         <div className="absolute inset-x-0 bottom-0 top-0 backdrop-blur-[1px] opacity-40 pointer-events-none" />
       </div>

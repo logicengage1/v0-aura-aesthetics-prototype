@@ -15,7 +15,6 @@ import { Footer } from "@/components/sections/footer"
 import { BookingModal } from "@/components/booking/booking-modal"
 import { StickyBookingBar } from "@/components/ui/sticky-booking-bar"
 import { SocialPulse } from "@/components/ui/social-pulse"
-import { AnatomyOfArtistry } from "@/components/sections/anatomy-of-artistry"
 import { TransformationTimeline } from "@/components/sections/transformation-timeline"
 import { AuraAssessment } from "@/components/booking/aura-assessment"
 
@@ -23,30 +22,23 @@ export default function Home() {
   return (
     <BookingProvider>
       <div className="min-h-screen relative">
-        {/* Navigation */}
         <Header />
-
-        {/* Main Content */}
         <main>
           <Hero />
           <TrustBar />
           <ResultsGallery />
           <TransformationTimeline />
           <Benefits />
-          <AnatomyOfArtistry />
           <Process />
           <Pricing />
           <Testimonials />
           <FAQ />
           <Newsletter />
         </main>
-
-        {/* Footer */}
         <Footer />
-
-        {/* UI Overlays */}
         <StickyBookingBar />
         <BookingModal />
+        <AuraAssessment />
         <SocialPulse />
       </div>
     </BookingProvider>

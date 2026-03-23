@@ -86,69 +86,66 @@ export function TransformationTimeline() {
           {/* Right: Detailed Content & Visual Simulation */}
           <div className="lg:col-span-11 grid lg:grid-cols-2 gap-12 bg-muted/50 rounded-[3rem] p-8 lg:p-14 glass animate-on-scroll [transition-delay:200ms]">
             
-            {/* Simulation Pane */}
-            <div className="relative aspect-square rounded-[2rem] bg-white overflow-hidden luxury-shadow group">
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* Simulated Results via layers */}
-                <svg viewBox="0 0 400 400" className="w-full h-full p-20 fill-none stroke-current opacity-10">
-                   <circle cx="200" cy="200" r="150" />
-                   <path d="M120 180 Q200 150 280 180" strokeWidth="2" strokeOpacity="0.5" />
-                   <path d="M120 220 Q200 250 280 220" strokeWidth="2" strokeOpacity="0.5" />
-                </svg>
+            {/* Simulation Pane: High-Res Macro-Skin Reveal */}
+            <div className="relative aspect-[4/5] lg:aspect-square rounded-[3rem] overflow-hidden luxury-shadow group">
+              {/* Natural/Initial State Image */}
+              <div className="absolute inset-0">
+                <img 
+                  src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Natural Skin State"
+                  className="h-full w-full object-cover brightness-[0.95]"
+                />
+              </div>
+              
+              {/* Smooth/Treated State Image (Cross-fade) */}
+              <motion.div 
+                className="absolute inset-0"
+                initial={false}
+                animate={{ 
+                  opacity: 1 - timelineDays[activeDay].intensity,
+                  scale: 1 + (1 - timelineDays[activeDay].intensity) * 0.05 // Subtle zoom as it smoothes
+                }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+              >
+                <img 
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Smooth Skin State"
+                  className="h-full w-full object-cover"
+                />
+                
+                {/* Golden Hour Radiance Overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-tr from-accent/5 via-transparent to-white/10 mix-blend-overlay"
+                  animate={{ opacity: (1 - timelineDays[activeDay].intensity) * 0.5 }}
+                />
+              </motion.div>
 
-                {/* The "Skin" Overlay with dynamic line intensity */}
-                <div className="relative w-full h-full flex items-center justify-center p-20 overflow-hidden">
-                   {/* Artistic representation of 'smoothness' */}
-                   <motion.div 
-                     animate={{ 
-                       filter: `blur(${timelineDays[activeDay].intensity * 4}px)`,
-                       opacity: 1 - (timelineDays[activeDay].intensity * 0.5)
-                     }}
-                     className="absolute inset-20 rounded-full bg-gradient-to-br from-[#FDFCFB] to-[#E2D1C3] shadow-inner border border-primary/5"
-                   />
-                   
-                   {/* The 'Lines' that fade away */}
-                   <svg viewBox="0 0 200 200" className="absolute w-full h-full p-24 text-primary">
-                     <motion.path 
-                       animate={{ 
-                         pathLength: timelineDays[activeDay].intensity,
-                         opacity: timelineDays[activeDay].intensity,
-                         translateY: timelineDays[activeDay].intensity * 5
-                       }}
-                       d="M60 70 Q100 60 140 70" 
-                       fill="none" 
-                       stroke="currentColor" 
-                       strokeWidth="1.5"
-                       strokeLinecap="round"
-                     />
-                     <motion.path 
-                       animate={{ 
-                         pathLength: timelineDays[activeDay].intensity,
-                         opacity: timelineDays[activeDay].intensity,
-                         translateY: timelineDays[activeDay].intensity * 10
-                       }}
-                       d="M50 85 Q100 75 150 85" 
-                       fill="none" 
-                       stroke="currentColor" 
-                       strokeWidth="1.5"
-                       strokeLinecap="round"
-                     />
-                   </svg>
+              {/* Day Badge Overlay */}
+              <div className="absolute top-8 left-8 z-20">
+                <div className="bg-black/60 backdrop-blur-xl px-8 py-4 rounded-3xl border border-white/20 flex flex-col items-start shadow-2xl">
+                   <div className="flex items-center gap-3 mb-1">
+                      <Calendar className="h-4 w-4 text-accent" />
+                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">Timeline Insight</span>
+                   </div>
+                   <p className="text-2xl font-serif font-medium text-white">Day {timelineDays[activeDay].day}</p>
                 </div>
               </div>
 
-              {/* Progress Detail Badge */}
-              <div className="absolute top-8 left-8 bg-black/80 backdrop-blur-md px-6 py-3 rounded-2xl flex items-center gap-3 border border-white/20">
-                <Calendar className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">
-                  DAY {timelineDays[activeDay].day}
-                </span>
+              {/* Status Badge Overlay */}
+              <div className="absolute bottom-10 right-10 z-20">
+                <motion.div 
+                   key={activeDay}
+                   initial={{ opacity: 0, x: 20 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   className="bg-white/95 backdrop-blur-md px-8 py-5 rounded-[2rem] border border-primary/10 shadow-lg text-right"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-1">Transformation Phase</p>
+                  <p className="text-xl font-serif font-medium text-foreground tracking-tight">{timelineDays[activeDay].results}</p>
+                </motion.div>
               </div>
 
-              <div className="absolute bottom-8 right-8 text-right bg-white/90 backdrop-blur-md px-6 py-3 rounded-2xl border border-primary/10">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Status</p>
-                <p className="text-sm font-serif font-medium text-foreground">{timelineDays[activeDay].results}</p>
-              </div>
+              {/* Subtle Noise for realism */}
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
             </div>
 
             {/* Info Pane */}

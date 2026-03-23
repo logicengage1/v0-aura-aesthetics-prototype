@@ -62,18 +62,7 @@ export function StepDetails() {
 
   return (
     <div className="flex flex-col">
-      {/* Header */}
-      <div className="mb-6 text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-accent">
-          Step 3 of 3
-        </p>
-        <h3 className="mt-2 font-serif text-2xl font-medium text-foreground">
-          Your Information
-        </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          We&apos;ll contact you to confirm your appointment
-        </p>
-      </div>
+      {/* Form */}
 
       {/* Form */}
       <div className="space-y-4">

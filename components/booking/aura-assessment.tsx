@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils"
 const steps = [
   {
     id: "focus",
-    title: "Project Your Vision",
-    subtitle: "Select the areas where you'd like to see the most refinement.",
+    title: "Concern",
+    subtitle: "Which areas would you like to refine?",
     options: [
       { id: "forehead", label: "Upper Forehead", icon: Target },
       { id: "frown-lines", label: "Between Brows", icon: Zap },
@@ -21,12 +21,21 @@ const steps = [
   },
   {
     id: "goal",
-    title: "Define Your Result",
-    subtitle: "What is your primary aesthetic objective?",
+    title: "Aesthetic Goal",
+    subtitle: "How would you describe your ideal result?",
     options: [
       { id: "natural", label: "Subtle Softening", description: "Maintain full expression while softening fine lines." },
       { id: "smooth", label: "Maximum Smoothness", description: "Achieve a sleek, airbrushed finish." },
-      { id: "prevent", label: "Proactive Prevention", description: "Stop lines before they become permanent." },
+    ],
+  },
+  {
+    id: "timeline",
+    title: "Timeline & Readiness",
+    subtitle: "When would you like to see these results?",
+    options: [
+      { id: "first-time", label: "First-time Explorer", description: "I'm new to Botox and want to learn more about the process." },
+      { id: "event", label: "Event-Driven", description: "I have a wedding or event coming up (ideal: 2-4 weeks prior)." },
+      { id: "maintenance", label: "Ongoing Maintenance", description: "I'm looking for a regular provider for my 3-4 month refresh." },
     ],
   },
 ]
@@ -37,9 +46,11 @@ export function AuraAssessment() {
   const [selections, setSelections] = useState<{
     areas: string[]
     goal: string | null
+    timeline: string | null
   }>({
     areas: [],
     goal: null,
+    timeline: null,
   })
 
   if (!isAssessmentOpen) return null
@@ -68,6 +79,8 @@ export function AuraAssessment() {
     }
   }
 
+  const progress = ((currentStep + 1) / steps.length) * 100
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-8">
       {/* Backdrop */}
@@ -84,163 +97,271 @@ export function AuraAssessment() {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        className="relative w-full max-w-4xl overflow-hidden rounded-[3rem] bg-card luxury-shadow border border-white/20"
+        className="relative w-full max-w-5xl overflow-hidden rounded-[3rem] bg-card luxury-shadow border border-white/20"
       >
+        {/* Progress Bar (Glass) */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-muted/30 z-20">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-primary via-accent to-primary"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          />
+        </div>
+
         <button
           onClick={() => setIsAssessmentOpen(false)}
-          className="absolute right-8 top-8 z-10 rounded-full bg-muted p-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-8 top-8 z-30 rounded-full bg-muted/50 backdrop-blur-md p-2 text-muted-foreground hover:text-foreground transition-all hover:scale-110 active:scale-95"
+          aria-label="Close modal"
         >
           <X className="h-6 w-6" />
         </button>
 
-        <div className="grid lg:grid-cols-5 h-full min-h-[600px]">
-          {/* Left Panel: Progress Indicator */}
-          <div className="lg:col-span-2 bg-primary p-12 text-primary-foreground flex flex-col justify-between overflow-hidden relative">
-            {/* Animated background shape */}
+        <div className="grid lg:grid-cols-12 h-full min-h-[650px]">
+          {/* Left Panel: Context */}
+          <div className="lg:col-span-4 bg-primary p-12 text-primary-foreground flex flex-col justify-between overflow-hidden relative">
             <motion.div 
                animate={{ rotate: 360 }}
-               transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-               className="absolute -top-20 -left-20 w-80 h-80 bg-white/5 rounded-[4rem] blur-2xl"
+               transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+               className="absolute -top-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl"
+            />
+            <motion.div 
+               animate={{ rotate: -360 }}
+               transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+               className="absolute -bottom-20 -right-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl"
             />
 
-            <div>
-              <div className="flex items-center gap-2 mb-8">
-                 <Sparkles className="h-6 w-6" />
-                 <span className="text-xs font-bold uppercase tracking-[0.3em]">Aura Assessment</span>
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-10 group cursor-default">
+                 <div className="p-2 rounded-xl bg-white/10 backdrop-blur-md group-hover:scale-110 transition-transform">
+                    <Sparkles className="h-6 w-6 text-accent" />
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/80">Aura Assessment</span>
               </div>
-              <h2 className="font-serif text-4xl font-medium leading-tight mb-6">
-                Your Journey to <br/>Personalized Radiance
+              <h2 className="font-serif text-4xl font-medium leading-[1.15] mb-8">
+                Your Journey <br/>to Personalized <br/><span className="text-accent italic">Radiance</span>
               </h2>
-              <p className="text-primary-foreground/70 leading-relaxed font-medium">
-                 A few expert questions to curate your perfect treatment protocol.
+              <p className="text-white/70 leading-relaxed font-medium text-lg">
+                 Define your aesthetic goals and let us curate your perfect treatment protocol. 
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="relative z-10 space-y-6">
               {steps.map((s, idx) => (
-                <div key={s.id} className="flex items-center gap-4">
+                <div key={s.id} className="flex items-center gap-5">
                    <div className={cn(
-                     "h-8 w-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all duration-500",
-                     idx <= currentStep ? "bg-white text-primary border-white" : "border-white/20 text-white/40"
+                     "h-10 w-10 rounded-2xl border-2 flex items-center justify-center text-sm font-bold transition-all duration-700",
+                     idx <= currentStep 
+                       ? "bg-white text-primary border-white shadow-[0_0_20px_rgba(255,255,255,0.3)]" 
+                       : "border-white/10 text-white/30"
                    )}>
                      {idx + 1}
                    </div>
-                   <span className={cn(
-                     "text-sm font-bold uppercase tracking-widest",
-                     idx <= currentStep ? "text-white" : "text-white/40"
-                   )}>
-                     {s.title}
-                   </span>
+                   <div className="flex flex-col">
+                      <span className={cn(
+                        "text-[10px] font-bold uppercase tracking-[0.2em]",
+                        idx <= currentStep ? "text-accent" : "text-white/20"
+                      )}>
+                        Phase {idx + 1}
+                      </span>
+                      <span className={cn(
+                        "text-sm font-bold tracking-wide",
+                        idx <= currentStep ? "text-white" : "text-white/30"
+                      )}>
+                        {s.title}
+                      </span>
+                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Panel: Content */}
-          <div className="lg:col-span-3 p-12 lg:p-16 flex flex-col justify-center">
+          {/* Right Panel: Interactive Selection */}
+          <div className="lg:col-span-8 p-12 lg:p-20 flex flex-col justify-center bg-card/50">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 25
+                }}
+                className="w-full max-w-2xl mx-auto"
               >
-                <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-accent mb-4">
-                  Step {currentStep + 1}
-                </h3>
-                <h2 className="font-serif text-4xl font-medium text-foreground tracking-tight mb-4">
-                  {steps[currentStep].title}
-                </h2>
-                <p className="text-muted-foreground text-lg mb-12">
-                  {steps[currentStep].subtitle}
-                </p>
+                <div className="mb-12">
+                   <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">
+                     Selection {currentStep + 1} of {steps.length}
+                   </h3>
+                   <h2 className="font-serif text-4xl font-medium text-foreground tracking-tight mb-6">
+                     {steps[currentStep].subtitle}
+                   </h2>
+                   <div className="h-1 w-20 bg-primary/20 rounded-full" />
+                </div>
 
-                {/* Option Grids */}
-                {currentStep === 0 && (
-                  <div className="grid grid-cols-2 gap-4">
-                    {steps[0].options.map((opt) => {
-                      const Icon = (opt as any).icon
-                      return (
-                        <button
-                          key={opt.id}
-                          onClick={() => handleAreaToggle(opt.id)}
-                          className={cn(
-                            "group relative p-6 rounded-3xl border-2 text-left transition-all duration-500",
-                            selections.areas.includes(opt.id)
-                              ? "bg-primary/5 border-primary shadow-lg"
-                              : "bg-background border-border hover:border-primary/50"
-                          )}
-                        >
-                          <div className={cn(
-                            "h-12 w-12 rounded-2xl mb-4 flex items-center justify-center transition-all",
-                            selections.areas.includes(opt.id) ? "bg-primary text-white" : "bg-muted text-primary"
-                          )}>
-                            <Icon className="h-6 w-6" />
-                          </div>
-                          <span className="block font-bold text-foreground transition-colors group-hover:text-primary">
-                            {opt.label}
-                          </span>
-                          {selections.areas.includes(opt.id) && (
-                            <div className="absolute top-4 right-4 h-6 w-6 bg-primary rounded-full flex items-center justify-center animate-in zoom-in">
-                              <Check className="h-3 w-3 text-white" />
+                {/* Step Content */}
+                <div className="min-h-[300px]">
+                  {currentStep === 0 && (
+                    <div className="grid grid-cols-2 gap-5">
+                      {steps[0].options.map((opt) => {
+                        const Icon = (opt as any).icon
+                        const isSelected = selections.areas.includes(opt.id)
+                        return (
+                          <button
+                            key={opt.id}
+                            onClick={() => handleAreaToggle(opt.id)}
+                            className={cn(
+                              "group relative p-8 rounded-[2rem] border-2 text-left transition-all duration-500",
+                              isSelected
+                                ? "bg-primary/5 border-primary shadow-2xl scale-[1.02]"
+                                : "bg-white border-border hover:border-primary/40 hover:scale-[1.01]"
+                            )}
+                          >
+                            <div className={cn(
+                              "h-14 w-14 rounded-2xl mb-6 flex items-center justify-center transition-all duration-500",
+                              isSelected ? "bg-primary text-white rotate-6 shadow-xl" : "bg-muted text-primary group-hover:bg-primary/10"
+                            )}>
+                              <Icon className="h-7 w-7" />
                             </div>
-                          )}
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {currentStep === 1 && (
-                   <div className="space-y-4">
-                    {steps[1].options.map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => setSelections(prev => ({ ...prev, goal: opt.id }))}
-                        className={cn(
-                          "w-full group relative p-6 rounded-3xl border-2 text-left transition-all duration-500",
-                          selections.goal === opt.id
-                            ? "bg-primary/5 border-primary shadow-lg"
-                            : "bg-background border-border hover:border-primary/50"
-                        )}
-                      >
-                        <div className="flex items-center justify-between">
-                           <div>
-                              <span className="block font-bold text-foreground text-lg mb-1">{opt.label}</span>
-                              <p className="text-sm text-muted-foreground">{(opt as any).description}</p>
-                           </div>
-                           {selections.goal === opt.id && (
-                              <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center animate-in zoom-in">
+                            <span className="block font-bold text-lg text-foreground transition-colors group-hover:text-primary">
+                              {opt.label}
+                            </span>
+                            {isSelected && (
+                              <motion.div 
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute top-6 right-6 h-7 w-7 bg-primary rounded-full flex items-center justify-center"
+                              >
                                 <Check className="h-4 w-4 text-white" />
-                              </div>
-                           )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                              </motion.div>
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
 
-                <div className="mt-16 flex items-center justify-between">
-                  {currentStep > 0 && (
+                  {currentStep === 1 && (
+                     <div className="space-y-4">
+                      {steps[1].options.map((opt) => {
+                        const isSelected = selections.goal === opt.id
+                        return (
+                          <button
+                            key={opt.id}
+                            onClick={() => setSelections(prev => ({ ...prev, goal: opt.id }))}
+                            className={cn(
+                              "w-full group relative p-8 rounded-[2rem] border-2 text-left transition-all duration-500",
+                              isSelected
+                                ? "bg-primary/5 border-primary shadow-2xl"
+                                : "bg-white border-border hover:border-primary/40"
+                            )}
+                          >
+                            <div className="flex items-center justify-between">
+                               <div className="flex-1">
+                                  <span className={cn(
+                                    "block font-bold text-xl mb-2 transition-colors",
+                                    isSelected ? "text-primary" : "text-foreground group-hover:text-primary"
+                                  )}>
+                                    {opt.label}
+                                  </span>
+                                  <p className="text-muted-foreground leading-relaxed">{(opt as any).description}</p>
+                               </div>
+                               <div className={cn(
+                                 "ml-6 h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all duration-500",
+                                 isSelected ? "bg-primary border-primary rotate-0" : "border-border -rotate-45"
+                               )}>
+                                 {isSelected && <Check className="h-4 w-4 text-white" />}
+                               </div>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {currentStep === 2 && (
+                    <div className="space-y-4">
+                      {steps[2].options.map((opt) => {
+                        const isSelected = selections.timeline === opt.id
+                        return (
+                          <button
+                            key={opt.id}
+                            onClick={() => setSelections(prev => ({ ...prev, timeline: opt.id }))}
+                            className={cn(
+                              "w-full group relative p-8 rounded-[2rem] border-2 text-left transition-all duration-500",
+                              isSelected
+                                ? "bg-primary/5 border-primary shadow-2xl"
+                                : "bg-white border-border hover:border-primary/40"
+                            )}
+                          >
+                             <div className="flex items-center justify-between">
+                               <div className="flex-1">
+                                  <span className={cn(
+                                    "block font-bold text-xl mb-2 transition-colors",
+                                    isSelected ? "text-primary" : "text-foreground group-hover:text-primary"
+                                  )}>
+                                    {opt.label}
+                                  </span>
+                                  <p className="text-muted-foreground leading-relaxed">{(opt as any).description}</p>
+                               </div>
+                               <div className={cn(
+                                 "ml-6 p-2 rounded-xl transition-all duration-500",
+                                 isSelected ? "bg-primary/10 text-primary" : "text-muted-foreground/30"
+                               )}>
+                                  <ArrowRight className="h-6 w-6" />
+                               </div>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-20 flex items-center justify-between pt-8 border-t border-border/50">
+                  {currentStep > 0 ? (
                     <button
                       onClick={() => setCurrentStep(currentStep - 1)}
-                      className="text-sm font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                      className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all"
                     >
-                      Go Back
+                      <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+                      Back
                     </button>
+                  ) : (
+                    <div />
                   )}
-                  <Button
-                    onClick={handleNext}
-                    disabled={currentStep === 0 ? selections.areas.length === 0 : !selections.goal}
-                    size="lg"
-                    className="ml-auto h-16 rounded-full px-10 text-lg font-bold group/btn"
-                  >
-                    <span className="flex items-center gap-2">
-                       {currentStep === steps.length - 1 ? "Get My Plan" : "Continue"}
-                       <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" />
-                    </span>
-                  </Button>
+                  
+                  <div className="flex items-center gap-6">
+                    <div className="flex gap-1.5">
+                       {steps.map((_, i) => (
+                         <div 
+                           key={i} 
+                           className={cn(
+                             "h-1.5 rounded-full transition-all duration-500",
+                             i === currentStep ? "w-8 bg-primary" : "w-1.5 bg-border"
+                           )} 
+                         />
+                       ))}
+                    </div>
+                    
+                    <Button
+                      onClick={handleNext}
+                      disabled={
+                        (currentStep === 0 && selections.areas.length === 0) ||
+                        (currentStep === 1 && !selections.goal) ||
+                        (currentStep === 2 && !selections.timeline)
+                      }
+                      size="lg"
+                      className="h-16 rounded-full px-12 text-lg font-bold group/btn shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.4)]"
+                    >
+                      <span className="flex items-center gap-3">
+                         {currentStep === steps.length - 1 ? "Finalize Your Plan" : "Next Step"}
+                         <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" />
+                      </span>
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>

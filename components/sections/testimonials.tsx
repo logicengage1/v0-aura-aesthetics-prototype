@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react"
+import { ChevronLeft, ChevronRight, Quote, Star, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
@@ -20,7 +20,7 @@ const testimonials = [
     location: "Santa Monica",
     quote: "Professional, clinical environment. The symmetry promise gave me total peace of mind.",
     rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=james",
+    avatar: null, // Shows monogram
   },
   {
     id: 3,
@@ -135,17 +135,31 @@ export function Testimonials() {
                       </div>
 
                       {/* Author */}
-                      <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:text-left">
-                        <div className="h-14 w-14 rounded-full border-2 border-primary/20 p-1 luxury-shadow">
-                          <img 
-                            src={testimonial.avatar} 
-                            alt={testimonial.name} 
-                            className="h-full w-full rounded-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg text-foreground tracking-tight">{testimonial.name}</p>
-                          <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground/80">{testimonial.location}</p>
+                      <div className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:text-left">
+                        {testimonial.avatar ? (
+                          <div className="h-20 w-20 rounded-full border-4 border-white/80 p-1 luxury-shadow overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                            <img 
+                              src={testimonial.avatar} 
+                              alt={testimonial.name} 
+                              className="h-full w-full rounded-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="h-20 w-20 rounded-full border-[3px] border-accent/40 bg-card luxury-shadow flex items-center justify-center group-hover:scale-105 transition-transform duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+                             <span className="text-2xl font-serif font-bold text-accent tracking-tighter">
+                                {testimonial.name.split(' ').map(n => n[0]).join('')}
+                             </span>
+                          </div>
+                        )}
+                        <div className="flex flex-col items-center sm:items-start group/verified">
+                          <div className="flex items-center gap-2 mb-1.5">
+                             <p className="font-bold text-xl text-foreground tracking-tight">{testimonial.name}</p>
+                             <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
+                                <CheckCircle2 className="h-3 w-3 text-accent" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-accent">Verified</span>
+                             </div>
+                          </div>
+                          <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground/80">{testimonial.location}</p>
                         </div>
                       </div>
                     </div>

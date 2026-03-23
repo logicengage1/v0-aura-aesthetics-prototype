@@ -49,13 +49,13 @@ export function Header() {
             </div>
             <div className="flex flex-col">
               <span className={cn(
-                "font-serif font-bold tracking-tight text-foreground transition-all duration-500",
-                isScrolled ? "text-xl" : "text-2xl"
+                "font-serif font-bold tracking-tight transition-all duration-500",
+                isScrolled ? "text-xl text-foreground" : "text-2xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
               )}>
                 Aura
               </span>
               {!isScrolled && (
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/60 animate-fade-in">
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent drop-shadow-sm animate-fade-in">
                   Aesthetics & Wellness
                 </span>
               )}
@@ -68,10 +68,18 @@ export function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                className="group relative text-sm font-bold uppercase tracking-widest text-foreground/70 transition-colors hover:text-foreground"
+                className={cn(
+                  "group relative text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300",
+                  isScrolled 
+                    ? "text-foreground/70 hover:text-foreground" 
+                    : "text-white/90 hover:text-white drop-shadow-sm"
+                )}
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
+                <span className={cn(
+                  "absolute -bottom-1.5 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full",
+                  isScrolled ? "bg-primary" : "bg-accent"
+                )} />
               </a>
             ))}
           </nav>
@@ -82,18 +90,26 @@ export function Header() {
               onClick={() => setIsOpen(true)}
               className={cn(
                 "hidden rounded-full font-bold transition-all hover:scale-105 active:scale-95 group overflow-hidden sm:inline-flex",
-                isScrolled ? "bg-primary h-10 px-6 text-xs" : "bg-foreground text-background h-12 px-8 text-sm"
+                isScrolled 
+                  ? "bg-primary h-10 px-6 text-xs text-primary-foreground" 
+                  : "bg-white text-black h-12 px-8 text-sm hover:bg-accent hover:text-white"
               )}
             >
-              <span className="relative z-10">Schedule Session</span>
-              <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full transition-transform duration-1000 group-hover:translate-x-full" />
+              <span className="relative z-10 flex items-center gap-2">
+                {isScrolled ? "Book Now" : "Schedule Session"}
+              </span>
+              <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full transition-transform duration-1000 group-hover:translate-x-full" />
             </Button>
             
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
                 "flex h-10 w-10 items-center justify-center rounded-full border transition-all lg:hidden",
-                isMobileMenuOpen ? "bg-foreground border-foreground text-background rotate-90" : "bg-background border-border text-foreground"
+                isMobileMenuOpen 
+                  ? "bg-foreground border-foreground text-background rotate-90" 
+                  : isScrolled 
+                    ? "bg-background border-border text-foreground"
+                    : "bg-white/10 border-white/30 text-white backdrop-blur-md"
               )}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >

@@ -45,18 +45,7 @@ export function StepDateTime() {
 
   return (
     <div className="flex flex-col">
-      {/* Header */}
-      <div className="mb-6 text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-accent">
-          Step 2 of 3
-        </p>
-        <h3 className="mt-2 font-serif text-2xl font-medium text-foreground">
-          Choose Date & Time
-        </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Select your preferred appointment slot
-        </p>
-      </div>
+      {/* Date Selection */}
 
       {/* Date Selection */}
       <div className="mb-6">
