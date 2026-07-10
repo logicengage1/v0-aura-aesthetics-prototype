@@ -218,7 +218,7 @@ export function AuraAssessment() {
                   {/* Step Content */}
                   <div className="min-h-[280px]">
                     {currentStep === 0 && (
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {steps[0].options.map((opt) => {
                           const Icon = (opt as any).icon
                           const isSelected = selections.areas.includes(opt.id)
@@ -368,7 +368,7 @@ export function AuraAssessment() {
                           (currentStep === 2 && !selections.timeline)
                         }
                         size="lg"
-                        className="h-14 rounded-full px-10 text-base font-bold group/btn shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.4)]"
+                        className="h-14 rounded-full px-6 sm:px-10 text-sm sm:text-base font-bold group/btn shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.4)]"
                       >
                         <span className="flex items-center gap-3">
                            {currentStep === steps.length - 1 ? "Calculate Aura Path" : "Next Step"}
@@ -414,7 +414,7 @@ export function AuraAssessment() {
                       {selections.timeline === 'event' && " Given your upcoming event, we'll schedule your session to ensure perfect settling time."}
                     </p>
                     
-                    <div className="grid grid-cols-2 gap-6 text-left border-t border-border/30 pt-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left border-t border-border/30 pt-8">
                        <div>
                           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Recommended Professional</p>
                           <p className="text-foreground font-serif text-lg">Aura Signature specialist</p>
@@ -436,7 +436,7 @@ export function AuraAssessment() {
                     <Button
                       onClick={handleBookNow}
                       size="lg"
-                      className="h-16 rounded-full px-16 text-lg font-bold group/btn shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.4)] order-1 sm:order-2"
+                      className="h-16 rounded-full px-8 sm:px-16 text-base sm:text-lg font-bold group/btn shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.4)] order-1 sm:order-2"
                     >
                       <span className="flex items-center gap-3">
                         Book Your Session

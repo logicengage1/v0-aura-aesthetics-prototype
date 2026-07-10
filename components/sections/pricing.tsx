@@ -153,7 +153,7 @@ export function Pricing() {
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-accent-foreground shadow-xl animate-bounce [animation-duration:3s]">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-accent-foreground shadow-xl">
                     <Star className="h-4 w-4 fill-current" />
                     {plan.badge}
                   </span>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useBooking } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
 import { Calendar, Clock, Sparkle, UserCheck } from "lucide-react"
@@ -9,33 +9,27 @@ import { cn } from "@/lib/utils"
 export function StickyBookingBar() {
   const { setIsOpen } = useBooking()
   const [isVisible, setIsVisible] = useState(false)
-  const [lastScrollY, setLastScrollY] = useState(0)
   const [isExpanded, setIsExpanded] = useState(true)
+  // Tracked in a ref so scrolling doesn't re-render on every event —
+  // state only changes when visibility/expansion actually flips.
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-      
+
       // Show bar after scrolling down 600px
-      if (currentScrollY > 600) {
-        setIsVisible(true)
-      } else {
-        setIsVisible(false)
-      }
+      setIsVisible(currentScrollY > 600)
 
       // Shrink on scroll down, expand on scroll up
-      if (currentScrollY > lastScrollY && currentScrollY > 700) {
-        setIsExpanded(false)
-      } else {
-        setIsExpanded(true)
-      }
+      setIsExpanded(!(currentScrollY > lastScrollY.current && currentScrollY > 700))
 
-      setLastScrollY(currentScrollY)
+      lastScrollY.current = currentScrollY
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [lastScrollY])
+  }, [])
 
   return (
     <div 

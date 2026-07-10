@@ -51,7 +51,7 @@ export function SocialPulse() {
         setCurrentActivity((prev) => (prev + 1) % activities.length)
         setIsVisible(true)
       }, 1000)
-    }, 10000)
+    }, 20000)
 
     return () => {
       clearTimeout(initialTimeout)
@@ -77,7 +77,7 @@ export function SocialPulse() {
             }}
             className="pointer-events-auto"
           >
-            <div className="relative overflow-hidden rounded-2xl glass p-4 pr-10 shadow-2xl border border-white/40 group">
+            <div className="relative overflow-hidden rounded-2xl bg-card p-4 pr-10 luxury-shadow border border-border group">
               {/* Animated Gradient Border */}
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 opacity-50" />
               
@@ -100,7 +100,7 @@ export function SocialPulse() {
               <motion.div 
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
-                transition={{ duration: 9, ease: "linear" }}
+                transition={{ duration: 19, ease: "linear" }}
                 className="absolute bottom-0 left-0 h-[2px] bg-primary/30"
               />
             </div>

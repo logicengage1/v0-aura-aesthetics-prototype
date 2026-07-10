@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef } from "react"
 import { useBooking } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play, Star, Sparkles } from "lucide-react"
@@ -9,11 +9,59 @@ import { cn } from "@/lib/utils"
 
 export function Hero() {
   const { setIsOpen, setIsAssessmentOpen } = useBooking()
-  const [scrollY, setScrollY] = useState(0)
+  const parallaxRef = useRef<HTMLDivElement>(null)
+  const scrimRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   useScrollReveal()
 
+  // Defer the hero video off the critical path: the poster image paints
+  // instantly, and we only start streaming/playing the video once the browser
+  // is idle, so it never competes with first paint or hydration.
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const video = videoRef.current
+    if (!video) return
+    let cancelled = false
+    const start = () => {
+      if (cancelled) return
+      video.play().catch(() => {
+        /* autoplay may be blocked; poster remains — acceptable fallback */
+      })
+    }
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number }
+    if (typeof w.requestIdleCallback === "function") {
+      w.requestIdleCallback(start)
+    } else {
+      const t = setTimeout(start, 1200)
+      return () => {
+        cancelled = true
+        clearTimeout(t)
+      }
+    }
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Parallax without React re-renders: mutate styles directly in a rAF frame.
+  useEffect(() => {
+    let ticking = false
+    const update = () => {
+      const y = window.scrollY
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = `translateY(${y * 0.25}px)`
+      }
+      if (scrimRef.current) {
+        scrimRef.current.style.opacity = String(Math.min(1, 0.6 + y * 0.001))
+      }
+      ticking = false
+    }
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true
+        requestAnimationFrame(update)
+      }
+    }
+    update()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -24,35 +72,35 @@ export function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Background Media & Parallax */}
-      <div 
-        className="absolute inset-0 z-0 scale-110" 
-        style={{ transform: `translateY(${scrollY * 0.25}px)` }}
-      >
+      <div ref={parallaxRef} className="absolute inset-0 z-0 scale-110">
         <video
-          autoPlay
+          ref={videoRef}
           muted
           loop
           playsInline
+          preload="none"
           poster="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1920&q=80"
-          className="h-full w-full object-cover brightness-[0.7] contrast-[1.1]"
+          className="h-full w-full object-cover"
         >
-          <source 
-            src="https://cdn.pixabay.com/video/2020/09/25/51159-464366601_large.mp4" 
-            type="video/mp4" 
+          <source
+            src="https://cdn.pixabay.com/video/2020/09/25/51159-464366601_large.mp4"
+            type="video/mp4"
           />
         </video>
-        
+
+        {/* Uniform darkening layer — replaces the per-frame `brightness/contrast`
+            CSS filters that forced expensive continuous GPU compositing */}
+        <div className="absolute inset-0 bg-black/30" />
+
         {/* Dynamic Multi-layered Scrim */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent transition-opacity duration-700"
-          style={{ opacity: 0.6 + scrollY * 0.001 }}
+        <div
+          ref={scrimRef}
+          className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent"
+          style={{ opacity: 0.6 }}
         />
-        
+
         {/* Top-down Header Scrim */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none" />
-        
-        {/* Submarine-style backdrop blur to quiet high-detail video frames */}
-        <div className="absolute inset-x-0 bottom-0 top-0 backdrop-blur-[1px] opacity-40 pointer-events-none" />
       </div>
 
       {/* Content Container with Isolation Blur */}
@@ -88,7 +136,7 @@ export function Hero() {
             <Button
               onClick={() => setIsOpen(true)}
               size="lg"
-              className="group relative h-18 overflow-hidden rounded-full bg-primary px-12 text-lg font-bold text-primary-foreground luxury-shadow transition-all hover:scale-105 active:scale-95"
+              className="group relative h-18 overflow-hidden rounded-full bg-primary px-6 sm:px-12 text-base sm:text-lg font-bold text-primary-foreground luxury-shadow transition-all hover:scale-105 active:scale-95"
             >
               <span className="relative z-10 flex items-center gap-3">
                 Book Your Consultation
@@ -101,7 +149,7 @@ export function Hero() {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-18 rounded-full border-white/30 bg-white/10 px-12 text-lg font-bold text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:border-white/50"
+                className="h-18 rounded-full border-white/30 bg-white/10 px-6 sm:px-12 text-base sm:text-lg font-bold text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:border-white/50"
                 onClick={() => setIsAssessmentOpen(true)}
               >
                 <span className="flex items-center gap-3">

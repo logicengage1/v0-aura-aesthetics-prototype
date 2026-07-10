@@ -90,9 +90,11 @@ export function TransformationTimeline() {
             <div className="relative aspect-[4/5] lg:aspect-square rounded-[3rem] overflow-hidden luxury-shadow group">
               {/* Natural/Initial State Image */}
               <div className="absolute inset-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&q=80&w=1200" 
+                <img
+                  src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&q=80&w=1200"
                   alt="Natural Skin State"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover brightness-[0.95]"
                 />
               </div>
@@ -107,9 +109,11 @@ export function TransformationTimeline() {
                 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
               >
-                <img 
-                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200" 
+                <img
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200"
                   alt="Smooth Skin State"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
                 

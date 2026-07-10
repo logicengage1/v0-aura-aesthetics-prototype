@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const treatments: { id: TreatmentArea; label: string; description: string }[] = [
+export const treatments: { id: TreatmentArea; label: string; description: string }[] = [
   {
     id: "forehead",
     label: "Forehead Lines",

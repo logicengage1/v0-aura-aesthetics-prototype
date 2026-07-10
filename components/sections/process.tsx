@@ -134,7 +134,7 @@ export function Process() {
             <Button
               onClick={() => setIsOpen(true)}
               size="lg"
-              className="relative h-18 rounded-full bg-primary px-12 text-lg font-bold text-primary-foreground luxury-shadow transition-all hover:scale-105 active:scale-95 group/btn overflow-hidden"
+              className="relative h-18 rounded-full bg-primary px-6 sm:px-12 text-base sm:text-lg font-bold text-primary-foreground luxury-shadow transition-all hover:scale-105 active:scale-95 group/btn overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Start Your Transformation

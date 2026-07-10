@@ -81,6 +81,8 @@ function ComparisonSlider({ item }: { item: BeforeAfterItem }) {
       <img
         src={item.afterImage}
         alt="After treatment"
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover"
       />
       
@@ -92,6 +94,8 @@ function ComparisonSlider({ item }: { item: BeforeAfterItem }) {
         <img
           src={item.beforeImage}
           alt="Before treatment"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-[100%] w-[auto] max-w-none object-cover"
           style={{ width: containerRef.current?.offsetWidth || "100%", height: "100%" }}
         />

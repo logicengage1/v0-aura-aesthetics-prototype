@@ -1,191 +1,81 @@
 "use client"
 
-import { useState } from "react"
 import { useBooking } from "@/lib/booking-context"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { ArrowLeft, Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Check, Mail, MapPin, Sparkles } from "lucide-react"
+import { treatments } from "./step-treatment"
 
+// Step 3: warm conclusion shown after Calendly confirms the booking.
+// The appointment is already secured at this point — nothing left to submit.
 export function StepDetails() {
-  const { 
-    contactInfo, 
-    updateContactInfo, 
-    consentChecked, 
-    setConsentChecked, 
-    setStep,
-    submitBooking,
-    isSubmitting
-  } = useBooking()
+  const { selectedTreatments, resetBooking } = useBooking()
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
-
-  const validatePhone = (phone: string) => {
-    return /^[\d\s\-\(\)]+$/.test(phone) && phone.replace(/\D/g, "").length >= 10
-  }
-
-  const handleSubmit = async () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!contactInfo.name.trim()) {
-      newErrors.name = "Name is required"
-    }
-
-    if (!contactInfo.email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!validateEmail(contactInfo.email)) {
-      newErrors.email = "Please enter a valid email"
-    }
-
-    if (!contactInfo.phone.trim()) {
-      newErrors.phone = "Phone is required"
-    } else if (!validatePhone(contactInfo.phone)) {
-      newErrors.phone = "Please enter a valid phone number"
-    }
-
-    if (!consentChecked) {
-      newErrors.consent = "You must agree to continue"
-    }
-
-    setErrors(newErrors)
-
-    if (Object.keys(newErrors).length === 0) {
-      await submitBooking()
-    }
-  }
+  const selectedLabels = treatments.filter((t) => selectedTreatments.includes(t.id))
 
   return (
-    <div className="flex flex-col">
-      {/* Form */}
+    <div className="flex flex-col items-center text-center">
+      {/* Celebration Icon */}
+      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary">
+        <Sparkles className="h-10 w-10 text-primary-foreground" />
+      </div>
 
-      {/* Form */}
-      <div className="space-y-4">
-        {/* Name */}
-        <div>
-          <Label htmlFor="name" className="text-sm font-medium text-foreground">
-            Full Name
-          </Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="Jane Smith"
-            value={contactInfo.name}
-            onChange={(e) => {
-              updateContactInfo({ name: e.target.value })
-              if (errors.name) setErrors((prev) => ({ ...prev, name: "" }))
-            }}
-            className={cn(
-              "mt-1.5 h-12 rounded-lg",
-              errors.name && "border-destructive"
-            )}
-          />
-          {errors.name && (
-            <p className="mt-1 text-xs text-destructive">{errors.name}</p>
-          )}
-        </div>
+      <h3 className="font-serif text-2xl font-medium text-foreground sm:text-3xl">
+        You&apos;re Booked — We Can&apos;t Wait to See You
+      </h3>
+      <p className="mt-3 max-w-sm text-muted-foreground">
+        Your session is confirmed. Take a breath — your most radiant self is officially on the calendar.
+      </p>
 
-        {/* Email */}
-        <div>
-          <Label htmlFor="email" className="text-sm font-medium text-foreground">
-            Email Address
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="jane@example.com"
-            value={contactInfo.email}
-            onChange={(e) => {
-              updateContactInfo({ email: e.target.value })
-              if (errors.email) setErrors((prev) => ({ ...prev, email: "" }))
-            }}
-            className={cn(
-              "mt-1.5 h-12 rounded-lg",
-              errors.email && "border-destructive"
-            )}
-          />
-          {errors.email && (
-            <p className="mt-1 text-xs text-destructive">{errors.email}</p>
-          )}
-        </div>
-
-        {/* Phone */}
-        <div>
-          <Label htmlFor="phone" className="text-sm font-medium text-foreground">
-            Phone Number
-          </Label>
-          <Input
-            id="phone"
-            type="tel"
-            placeholder="(310) 555-1234"
-            value={contactInfo.phone}
-            onChange={(e) => {
-              updateContactInfo({ phone: e.target.value })
-              if (errors.phone) setErrors((prev) => ({ ...prev, phone: "" }))
-            }}
-            className={cn(
-              "mt-1.5 h-12 rounded-lg",
-              errors.phone && "border-destructive"
-            )}
-          />
-          {errors.phone && (
-            <p className="mt-1 text-xs text-destructive">{errors.phone}</p>
-          )}
-        </div>
-
-        {/* Consent */}
-        <div className="rounded-lg bg-muted/50 p-4">
-          <div className="flex items-start gap-3">
-            <Checkbox
-              id="consent"
-              checked={consentChecked}
-              onCheckedChange={(checked) => {
-                setConsentChecked(checked === true)
-                if (errors.consent) setErrors((prev) => ({ ...prev, consent: "" }))
-              }}
-              className="mt-0.5"
-            />
-            <Label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              I understand that this is a consultation request and that a member of the Aura team will contact me to finalize my appointment. I consent to receive communications regarding my booking.
-            </Label>
+      {/* Booking Summary */}
+      <div className="mt-8 w-full rounded-2xl bg-muted/50 p-6">
+        <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-accent">
+          Your Session
+        </p>
+        <div className="space-y-3">
+          {selectedLabels.map((t) => (
+            <div key={t.id} className="flex items-center justify-center gap-3">
+              <Check className="h-5 w-5 text-primary" />
+              <span className="text-foreground">{t.label}</span>
+            </div>
+          ))}
+          <div className="flex items-center justify-center gap-3">
+            <MapPin className="h-5 w-5 text-primary" />
+            <span className="text-foreground">123 Wellness Way, Beverly Hills</span>
           </div>
-          {errors.consent && (
-            <p className="mt-2 text-xs text-destructive">{errors.consent}</p>
-          )}
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="mt-6 flex gap-3">
-        <Button
-          onClick={() => setStep(2)}
-          variant="outline"
-          disabled={isSubmitting}
-          className="h-12 flex-1 rounded-full border-foreground/20 text-base font-medium"
-        >
-          <ArrowLeft className="mr-2 h-5 w-5" />
-          Back
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="h-12 flex-1 rounded-full bg-primary text-base font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            "Request Appointment"
-          )}
-        </Button>
+      {/* What's Next */}
+      <div className="mt-8 w-full text-left">
+        <p className="mb-3 text-sm font-medium text-foreground">What happens next:</p>
+        <ol className="space-y-2 text-sm text-muted-foreground">
+          <li className="flex items-start gap-2">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+              <Mail className="h-3 w-3" />
+            </span>
+            A confirmation email with your appointment details is on its way
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+              1
+            </span>
+            Our team will reach out if anything needs to be confirmed
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+              2
+            </span>
+            Complete intake forms sent via email before your visit
+          </li>
+        </ol>
       </div>
+
+      <Button
+        onClick={resetBooking}
+        className="mt-8 h-12 w-full rounded-full bg-primary text-base font-medium text-primary-foreground transition-all hover:bg-primary/90"
+      >
+        Done
+      </Button>
     </div>
   )
 }
