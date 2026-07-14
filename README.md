@@ -26,24 +26,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 ## Environment Variables
 
-The AI concierge chat widget and its Airtable lead logging require server-side
-secrets. Copy `.env.example` to `.env.local` and fill in real values (this file
-is gitignored — never commit real keys):
+The AI concierge chat widget requires a server-side secret. Copy `.env.example`
+to `.env.local` and fill in a real value (this file is gitignored — never commit
+real keys):
 
 | Variable | Purpose |
 | --- | --- |
 | `ANTHROPIC_API_KEY` | Powers the chat assistant (`app/api/chat`). Create one at [console.anthropic.com](https://console.anthropic.com); billing must be funded. |
-| `AIRTABLE_TOKEN` | Server-side lead logging. Airtable PAT with `data.records:read` + `data.records:write`. |
-| `AIRTABLE_BASE` | Airtable base ID (default `appqdYlMxxCqmmIyZ`). |
-| `AIRTABLE_TABLE` | Airtable table name (default `Bookings`). |
 
-> **Deployment:** these are not in the repo, so the live site won't have them
-> automatically. Set the same four variables in **Netlify → Site settings →
-> Environment variables**, then redeploy — otherwise the chat widget returns its
-> "having a moment" fallback and no leads are logged.
+> **Deployment:** this is not in the repo, so the live site won't have it
+> automatically. Set it in your host's environment-variable settings, then
+> redeploy — otherwise the chat widget returns its "having a moment" fallback.
 
-The chat also opens the in-app booking modal, which embeds Calendly at
-`https://calendly.com/aura-aesthetics/booking`.
+Bookings are handled entirely by Calendly (embedded in the in-app booking modal
+at `https://calendly.com/aura-aesthetics/booking`) — no booking data is stored
+on our side.
 
 ## Learn More
 

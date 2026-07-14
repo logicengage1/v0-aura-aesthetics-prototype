@@ -59,32 +59,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Something went wrong." }, { status: 500 })
   }
 
-  logLead(messages, reply).catch((err) => console.error("Airtable logging failed:", err))
-
   return NextResponse.json({ reply })
-}
-
-async function logLead(messages: ChatMessage[], reply: string) {
-  const token = process.env.AIRTABLE_TOKEN
-  const base = process.env.AIRTABLE_BASE
-  const table = process.env.AIRTABLE_TABLE
-  if (!token || !base || !table) return
-
-  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content ?? ""
-
-  await fetch(`https://api.airtable.com/v0/${base}/${table}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      fields: {
-        Name: "Chat Lead",
-        Appointment: new Date().toISOString(),
-        Treatment: lastUserMessage.slice(0, 100),
-        Reply: reply.slice(0, 500),
-      },
-    }),
-  })
 }
