@@ -25,6 +25,9 @@
   --input: #E0DAD0;
   --ring: #98A993;
   --radius: 0.625rem;
+  /* RGB channel triplets for rgba(var(--x), <alpha>) shadows/glows */
+  --primary-rgb: 152, 169, 147; /* #98A993 */
+  --foreground-rgb: 44, 44, 44; /* #2C2C2C */
 }
 
 @theme inline {

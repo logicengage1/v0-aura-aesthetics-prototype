@@ -138,22 +138,16 @@ export function Pricing() {
             <div
               key={index}
               className={cn(
-                "animate-on-scroll group relative rounded-[3rem] p-10 lg:p-14 transition-all duration-700 luxury-shadow",
+                "animate-on-scroll group relative rounded-[3rem] p-10 lg:p-14 transition-transform duration-300 ease-out hover:-translate-y-2",
                 plan.highlighted
-                  ? "bg-foreground text-background scale-105 z-10"
-                  : "bg-background hover:-translate-y-2 hover:shadow-2xl z-0"
+                  ? "bg-foreground text-background z-10"
+                  : "bg-background z-0"
               )}
-              style={{ transitionDelay: `${(index + 4) * 150}ms` }}
             >
-              {/* Highlight Glow for Featured Card */}
-              {plan.highlighted && (
-                <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50" />
-              )}
-
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-accent-foreground shadow-xl">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-accent-foreground">
                     <Star className="h-4 w-4 fill-current" />
                     {plan.badge}
                   </span>
@@ -212,10 +206,9 @@ export function Pricing() {
                 {/* Features */}
                 <ul className="mt-10 space-y-4">
                   {plan.features.map((feature, featureIndex) => (
-                    <li 
-                      key={featureIndex} 
-                      className="flex items-start gap-4 transition-all duration-300 hover:translate-x-2"
-                      style={{ transitionDelay: `${featureIndex * 50}ms` }}
+                    <li
+                      key={featureIndex}
+                      className="flex items-start gap-4"
                     >
                       <div className={cn(
                         "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
@@ -237,14 +230,13 @@ export function Pricing() {
                 <Button
                   onClick={() => setIsOpen(true)}
                   className={cn(
-                    "mt-12 w-full h-16 rounded-full text-lg font-bold transition-all luxury-shadow overflow-hidden group/btn",
+                    "mt-12 w-full h-16 rounded-full text-lg font-bold transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02]",
                     plan.highlighted
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "bg-foreground text-background hover:bg-foreground/90"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_12px_24px_-12px_rgba(var(--primary-rgb),0.55)]"
+                      : "bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_12px_24px_-12px_rgba(var(--foreground-rgb),0.45)]"
                   )}
                 >
-                  <span className="relative z-10">{plan.cta}</span>
-                  <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full transition-transform duration-1000 group-hover/btn:translate-x-full" />
+                  {plan.cta}
                 </Button>
 
                 {/* Tooltip Link */}
