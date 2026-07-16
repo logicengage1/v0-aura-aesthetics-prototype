@@ -41,7 +41,7 @@ const steps = [
 ]
 
 export function AuraAssessment() {
-  const { isAssessmentOpen, setIsAssessmentOpen, setIsOpen, toggleTreatment, selectedTreatments } = useBooking()
+  const { isAssessmentOpen, setIsAssessmentOpen, setIsOpen, toggleTreatment, selectedTreatments, setSource } = useBooking()
   const [currentStep, setCurrentStep] = useState(0)
   const [showResult, setShowResult] = useState(false)
   const [selections, setSelections] = useState<{
@@ -80,6 +80,7 @@ export function AuraAssessment() {
         toggleTreatment(area as TreatmentArea)
       }
     })
+    setSource('assessment')
     setIsAssessmentOpen(false)
     setIsOpen(true)
   }

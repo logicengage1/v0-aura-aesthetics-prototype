@@ -12,14 +12,18 @@ export type TreatmentArea =
   | "lip-flip"
   | "neck-bands"
 
+export type BookingSource = "assessment" | "direct" | null
+
 export interface BookingState {
   currentStep: BookingStep
   selectedTreatments: TreatmentArea[]
+  source: BookingSource
 }
 
 interface BookingContextType extends BookingState {
   setStep: (step: BookingStep) => void
   toggleTreatment: (treatment: TreatmentArea) => void
+  setSource: (source: BookingSource) => void
   resetBooking: () => void
   isOpen: boolean
   setIsOpen: (open: boolean) => void
@@ -30,6 +34,7 @@ interface BookingContextType extends BookingState {
 const initialState: BookingState = {
   currentStep: 1,
   selectedTreatments: [],
+  source: null,
 }
 
 const BookingContext = createContext<BookingContextType | null>(null)
@@ -52,6 +57,10 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     }))
   }
 
+  const setSource = (source: BookingSource) => {
+    setState((prev) => ({ ...prev, source }))
+  }
+
   const resetBooking = () => {
     setState(initialState)
     setIsOpen(false)
@@ -64,6 +73,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         ...state,
         setStep,
         toggleTreatment,
+        setSource,
         resetBooking,
         isOpen,
         setIsOpen,

@@ -23,7 +23,7 @@ const OFFSCREEN_STYLE: CSSProperties = {
 }
 
 export function StepDateTime({ active }: { active: boolean }) {
-  const { setStep } = useBooking()
+  const { setStep, source, selectedTreatments } = useBooking()
   const [iframeLoaded, setIframeLoaded] = useState(false)
 
   // Calendly embed styling params (hex, no #) to match the site's palette.
@@ -37,8 +37,16 @@ export function StepDateTime({ active }: { active: boolean }) {
       embed_domain: window.location.hostname,
       embed_type: "Inline",
     })
+
+    if (source === "assessment") {
+      params.append("utm_source", "aura_assessment")
+    } else {
+      params.append("utm_source", "website_direct")
+    }
+
+    // Intentionally omitting selectedTreatments prefill so the URL is 100% static on mount
     return `${CALENDLY_URL}?${params.toString()}`
-  }, [])
+  }, [source])
 
   useEffect(() => {
     function handleCalendlyMessage(e: MessageEvent) {
@@ -70,6 +78,12 @@ export function StepDateTime({ active }: { active: boolean }) {
           src={embedUrl}
           title="Schedule your appointment"
           onLoad={() => setIframeLoaded(true)}
+          style={{
+             // Hack: Try to shift Calendly's default blue to something resembling our Sage Green
+             // Note: if the user upgrades to Calendly Pro, this filter will shift our ALREADY CORRECT hex codes, 
+             // so they should remove this style block once upgraded.
+             filter: "hue-rotate(220deg) saturate(0.6) brightness(1.05)",
+          }}
           className={cn("h-full w-full border-0 transition-opacity duration-500", iframeLoaded ? "opacity-100" : "opacity-0")}
         />
       </div>
