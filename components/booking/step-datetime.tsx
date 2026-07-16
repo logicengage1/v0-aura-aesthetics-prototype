@@ -29,7 +29,7 @@ export function StepDateTime({ active }: { active: boolean }) {
   // embed_domain is required for Calendly to postMessage scheduling events to the parent.
   const embedUrl = useMemo(() => {
     const params = new URLSearchParams({
-      background_color: "fdfbf7",
+      background_color: "f9f6f1",
       text_color: "2c2c2c",
       primary_color: "98a993",
       hide_gdpr_banner: "1",
@@ -61,7 +61,7 @@ export function StepDateTime({ active }: { active: boolean }) {
   return (
     <div className="flex flex-col" style={active ? undefined : OFFSCREEN_STYLE} aria-hidden={!active}>
       <p className="mb-3 text-sm font-medium text-foreground">Pick a time that works for you</p>
-      <div className="relative overflow-hidden rounded-2xl border border-border" style={{ height: 480 }}>
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-[#F9F6F1]" style={{ height: 700 }}>
         {!iframeLoaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-muted/50">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
@@ -82,6 +82,9 @@ export function StepDateTime({ active }: { active: boolean }) {
              // Note: if the user upgrades to Calendly Pro, this filter will shift our ALREADY CORRECT hex codes, 
              // so they should remove this style block once upgraded.
              filter: "hue-rotate(220deg) saturate(0.6) brightness(1.05)",
+             // Hack: Multiply blend mode turns Calendly's default white background transparent, 
+             // allowing the parent container's #F9F6F1 background to show through.
+             mixBlendMode: "multiply",
           }}
           className={cn("h-full w-full border-0 transition-opacity duration-500", iframeLoaded ? "opacity-100" : "opacity-0")}
         />
