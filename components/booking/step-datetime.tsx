@@ -14,11 +14,10 @@ const CALENDLY_URL = "https://calendly.com/aura-aesthetics/booking"
 // pre-mounting. Positioning it off-screen keeps it in the render tree so the
 // Calendly SPA fully loads while the user is still on Step 1.
 const OFFSCREEN_STYLE: CSSProperties = {
-  position: "fixed",
-  left: "-10000px",
-  top: 0,
-  width: "512px",
-  opacity: 0,
+  position: "absolute",
+  inset: 0,
+  zIndex: -1,
+  opacity: 0.01,
   pointerEvents: "none",
 }
 

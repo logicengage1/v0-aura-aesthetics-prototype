@@ -1,39 +1,55 @@
 "use client"
 
 import { useBooking } from "@/lib/booking-context"
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
 import { StepTreatment } from "./step-treatment"
 import { StepDateTime } from "./step-datetime"
 import { StepDetails } from "./step-details"
 import { cn } from "@/lib/utils"
-import { Calendar } from "lucide-react"
+import { Calendar, X } from "lucide-react"
 
 export function BookingModal() {
   const { isOpen, setIsOpen, currentStep, resetBooking } = useBooking()
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      resetBooking()
-    }
-    setIsOpen(open)
+  const handleClose = () => {
+    resetBooking()
+    setIsOpen(false)
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent
-        className="max-h-[95vh] w-[95vw] rounded-[3rem] border-0 bg-card p-0 shadow-2xl overflow-hidden transition-all duration-700 sm:max-w-5xl"
+    <div
+      className={cn(
+        "fixed inset-0 flex items-center justify-center p-4 transition-all duration-700",
+        isOpen
+          ? "opacity-100 z-50 pointer-events-auto"
+          : "opacity-[0.01] -z-50 pointer-events-none" 
+      )}
+      style={{ 
+        visibility: "visible" 
+      }}
+    >
+      {/* Backdrop */}
+      <div 
+        className={cn(
+          "absolute inset-0 bg-black/50 transition-opacity duration-700",
+          isOpen ? "opacity-100" : "opacity-0"
+        )} 
+        onClick={handleClose} 
+      />
+
+      {/* Modal Content */}
+      <div
+        className={cn(
+          "relative bg-background max-h-[95vh] w-[95vw] rounded-[3rem] border-0 p-0 shadow-2xl overflow-hidden transition-all duration-700 sm:max-w-5xl",
+          isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+        )}
       >
-        <DialogTitle className="sr-only">
-          Book Your Consultation
-        </DialogTitle>
-        <DialogDescription className="sr-only">
-          Complete the steps to book your Botox consultation at Aura Aesthetics
-        </DialogDescription>
+        <button
+          onClick={handleClose}
+          className="absolute right-6 top-6 z-50 rounded-full bg-black/10 backdrop-blur-md p-2 text-foreground/70 hover:text-foreground transition-all hover:scale-110 active:scale-95"
+          aria-label="Close modal"
+        >
+          <X className="h-5 w-5" />
+        </button>
 
         <div className="flex flex-col lg:flex-row h-full min-h-[600px]">
           {/* Left Panel: Context & Progress */}
@@ -86,8 +102,8 @@ export function BookingModal() {
           </div>
 
           {/* Right Panel: Content Area */}
-          <div className="lg:w-2/3 p-10 lg:p-14 bg-card/50 flex flex-col justify-center overflow-hidden">
-             <div className="w-full max-w-lg mx-auto overflow-y-auto max-h-[80vh] hide-scrollbar py-2">
+          <div className="lg:w-2/3 p-10 lg:p-14 bg-card/50 flex flex-col justify-center overflow-hidden relative">
+             <div className="w-full max-w-lg mx-auto overflow-y-auto max-h-[80vh] hide-scrollbar py-2 relative">
                {currentStep === 1 && <StepTreatment />}
                {/* Always mounted while the modal is open so the Calendly iframe
                    loads in the background during treatment selection */}
@@ -96,7 +112,7 @@ export function BookingModal() {
              </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   )
 }
